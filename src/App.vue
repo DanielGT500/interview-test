@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <input type="number" v-model="limit" />
-    <Numbers/>
+    <Numbers :limit="limit" /> <!-- passing limit as a prop -->
   </div>
 </template>
 

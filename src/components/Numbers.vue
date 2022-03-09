@@ -1,6 +1,13 @@
 <template>
   <div>
-    <div class="number" :id="'number-'+number" v-for="number in n()" :key="number" @mouseover="hov(number)" @mouseout="reset">
+    <div
+      class="number"
+      :id="'number-'+number"
+      v-for="number in numArray()"
+      :key="number"
+      @mouseover="setDivisors(number)"
+      @mouseout="reset">
+      <!-- Attributes are easier to read in a column if there are many of them. -->
       {{number}}
     </div>
   </div>
@@ -11,30 +18,24 @@ export default {
   data()
   {
     return {
-      limit: this.$parent.limit,
       numbers: []
     }
   },
-  watch: {
-    ['$parent.limit'](newLimit)
-    {
-      this.limit = newLimit;
-    }
-  },
+  
+  props: ['limit'], // The component shouldn't rely on ancestor state, so using props instead of watch to make this component more easily reusable.
+  
   methods: {
-    n()
-    {
+    // changed name for two of the methods to be more self-explanatory.
+    numArray() {
       let numbers = [];
-      for(var i = 0; i < this.limit; i++)
+      for(var i = 1; i <= this.limit; i++) // array needs to start from 1 as 0 can't be divided so doesn't make sense to render and last number should be the number entered into the input field.
       {
         numbers = [...numbers, i];
       }
       return numbers.sort(() => Math.random() - 0.5);
     },
-    hov(number)
-    {
+    setDivisors(number) {
       const nums = document.querySelectorAll('.number');
-
       for(let i = 0; i < nums.length; i++)
       {
         const num = nums[i].textContent.trim();
@@ -45,8 +46,7 @@ export default {
         }
       }
     },
-    reset()
-    {
+    reset() {
       const nums = document.querySelectorAll('.number');
       nums.forEach(num => num.classList.remove('active'))
     }
